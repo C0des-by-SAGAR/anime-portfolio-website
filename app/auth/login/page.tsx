@@ -19,11 +19,11 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    const supabase = createClient()
     setIsLoading(true)
     setError(null)
 
     try {
+      const supabase = createClient()
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -31,7 +31,18 @@ export default function LoginPage() {
       if (error) throw error
       router.push("/dashboard")
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred")
+      if (error instanceof Error) {
+        // Check if it's the missing env vars error
+        if (error.message.includes("Missing Supabase environment variables")) {
+          setError(
+            "Configuration error: Supabase environment variables are not set. Please contact the administrator or check Vercel environment variables."
+          )
+        } else {
+          setError(error.message)
+        }
+      } else {
+        setError("An error occurred during login. Please try again.")
+      }
     } finally {
       setIsLoading(false)
     }
