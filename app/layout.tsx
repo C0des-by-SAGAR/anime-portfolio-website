@@ -83,7 +83,12 @@ export const metadata: Metadata = {
     google: "your-google-verification-code",
     yandex: "your-yandex-verification-code",
   },
-    generator: 'v0.app'
+  icons: {
+    icon: "/website-logo.png",
+    shortcut: "/website-logo.png",
+    apple: "/website-logo.png",
+  },
+  generator: 'v0.app'
 }
 
 export default function RootLayout({
@@ -112,6 +117,7 @@ export default function RootLayout({
           }}
         />
         <link rel="canonical" href="https://animeverse.vercel.app" />
+        <link rel="icon" href="/website-logo.png" type="image/png" />
       </head>
       <body className="bg-background text-foreground">{children}</body>
     </html>
