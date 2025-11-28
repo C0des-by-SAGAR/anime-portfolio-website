@@ -10,29 +10,57 @@ export function Navigation() {
   const [user, setUser] = useState<any>(null)
   const router = useRouter()
   const pathname = usePathname()
-  const supabase = createClient()
 
   useEffect(() => {
+    let supabase: any
+    try {
+      supabase = createClient()
+    } catch (error) {
+      // If Supabase client creation fails (e.g., missing env vars), just show logged out state
+      console.warn("Supabase client not available:", error)
+      return
+    }
+
     const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      setUser(user)
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser()
+        setUser(user)
+      } catch (error) {
+        // Silently handle errors during build or when env vars are missing
+        console.warn("Failed to get user:", error)
+      }
     }
     getUser()
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-    })
+    try {
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((_event, session) => {
+        setUser(session?.user ?? null)
+      })
 
-    return () => subscription.unsubscribe()
-  }, [supabase.auth])
+      return () => {
+        if (subscription) {
+          subscription.unsubscribe()
+        }
+      }
+    } catch (error) {
+      console.warn("Failed to set up auth state listener:", error)
+    }
+  }, [])
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    router.push("/")
+    try {
+      const supabase = createClient()
+      await supabase.auth.signOut()
+      router.push("/")
+    } catch (error) {
+      console.error("Failed to sign out:", error)
+      // Still redirect even if sign out fails
+      router.push("/")
+    }
   }
 
   const isActive = (path: string) => pathname === path
