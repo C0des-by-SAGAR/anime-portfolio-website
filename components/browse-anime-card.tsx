@@ -24,6 +24,9 @@ export function BrowseAnimeCard({ anime, userId }: BrowseAnimeCardProps) {
   const addToList = async () => {
     setIsLoading(true)
     try {
+      // If status is completed, set episodes_watched to total_episodes
+      const episodesWatched = status === "completed" && anime.episodes ? anime.episodes : 0
+      
       const { error } = await supabase.from("anime_lists").insert({
         user_id: userId,
         mal_id: anime.mal_id,
@@ -31,6 +34,7 @@ export function BrowseAnimeCard({ anime, userId }: BrowseAnimeCardProps) {
         image_url: anime.images.jpg.large_image_url || anime.images.jpg.image_url,
         status,
         total_episodes: anime.episodes,
+        episodes_watched: episodesWatched,
       })
 
       if (error) {
@@ -145,17 +149,17 @@ export function BrowseAnimeCard({ anime, userId }: BrowseAnimeCardProps) {
             {/* Add to List */}
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Add to list:</label>
+                <label className="block text-sm font-medium mb-2 text-white">Add to list:</label>
                 <Select value={status} onValueChange={setStatus}>
-                  <SelectTrigger className="bg-slate-800/50 border-purple-500/30">
+                  <SelectTrigger className="bg-slate-800/80 border-purple-500/50 text-white hover:bg-slate-700/80">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="glass border-purple-500/20">
-                    <SelectItem value="watching">Watching</SelectItem>
-                    <SelectItem value="completed">Completed</SelectItem>
-                    <SelectItem value="plan_to_watch">Plan to Watch</SelectItem>
-                    <SelectItem value="on_hold">On Hold</SelectItem>
-                    <SelectItem value="dropped">Dropped</SelectItem>
+                  <SelectContent className="glass border-purple-500/30 bg-slate-900/95">
+                    <SelectItem value="watching" className="text-white focus:bg-purple-600/20 focus:text-purple-400">Watching</SelectItem>
+                    <SelectItem value="completed" className="text-white focus:bg-cyan-600/20 focus:text-cyan-400">Completed</SelectItem>
+                    <SelectItem value="plan_to_watch" className="text-white focus:bg-pink-600/20 focus:text-pink-400">Plan to Watch</SelectItem>
+                    <SelectItem value="on_hold" className="text-white focus:bg-orange-600/20 focus:text-orange-400">On Hold</SelectItem>
+                    <SelectItem value="dropped" className="text-white focus:bg-red-600/20 focus:text-red-400">Dropped</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

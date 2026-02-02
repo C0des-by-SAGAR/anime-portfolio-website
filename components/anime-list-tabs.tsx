@@ -27,26 +27,26 @@ export function AnimeListTabs({ animeLists, userId }: AnimeListTabsProps) {
       <TabsList className="glass border border-purple-500/20 p-1 mb-8">
         <TabsTrigger
           value="watching"
-          className="data-[state=active]:bg-purple-600/20 data-[state=active]:text-purple-400"
+          className="text-white data-[state=active]:bg-purple-600/20 data-[state=active]:text-purple-400"
         >
           Watching ({watching.length})
         </TabsTrigger>
-        <TabsTrigger value="completed" className="data-[state=active]:bg-cyan-600/20 data-[state=active]:text-cyan-400">
+        <TabsTrigger value="completed" className="text-white data-[state=active]:bg-cyan-600/20 data-[state=active]:text-cyan-400">
           Completed ({completed.length})
         </TabsTrigger>
         <TabsTrigger
           value="plan_to_watch"
-          className="data-[state=active]:bg-pink-600/20 data-[state=active]:text-pink-400"
+          className="text-white data-[state=active]:bg-pink-600/20 data-[state=active]:text-pink-400"
         >
           Plan to Watch ({planToWatch.length})
         </TabsTrigger>
         <TabsTrigger
           value="on_hold"
-          className="data-[state=active]:bg-orange-600/20 data-[state=active]:text-orange-400"
+          className="text-white data-[state=active]:bg-orange-600/20 data-[state=active]:text-orange-400"
         >
           On Hold ({onHold.length})
         </TabsTrigger>
-        <TabsTrigger value="dropped" className="data-[state=active]:bg-red-600/20 data-[state=active]:text-red-400">
+        <TabsTrigger value="dropped" className="text-white data-[state=active]:bg-red-600/20 data-[state=active]:text-red-400">
           Dropped ({dropped.length})
         </TabsTrigger>
       </TabsList>

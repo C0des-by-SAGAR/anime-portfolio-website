@@ -8,7 +8,17 @@ export function DashboardStats({ animeLists }: DashboardStatsProps) {
   const watching = animeLists.filter((a) => a.status === "watching").length
   const completed = animeLists.filter((a) => a.status === "completed").length
   const planToWatch = animeLists.filter((a) => a.status === "plan_to_watch").length
-  const totalEpisodes = animeLists.reduce((sum, a) => sum + (a.episodes_watched || 0), 0)
+  const totalEpisodes = animeLists.reduce((sum, a) => {
+    // For completed anime, count all episodes
+    if (a.status === "completed" && a.total_episodes) {
+      return sum + a.total_episodes
+    }
+    // For watching and on_hold, count episodes_watched
+    if ((a.status === "watching" || a.status === "on_hold") && a.episodes_watched) {
+      return sum + a.episodes_watched
+    }
+    return sum
+  }, 0)
 
   const stats = [
     { label: "Watching", value: watching, color: "from-purple-600 to-purple-400" },

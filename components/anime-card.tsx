@@ -20,7 +20,13 @@ export function AnimeCard({ anime, userId }: AnimeCardProps) {
   const updateStatus = async (newStatus: string) => {
     setIsLoading(true)
     try {
-      const { error } = await supabase.from("anime_lists").update({ status: newStatus }).eq("id", anime.id)
+      // If status is changed to completed, set episodes_watched to total_episodes
+      const updateData: any = { status: newStatus }
+      if (newStatus === "completed" && anime.total_episodes) {
+        updateData.episodes_watched = anime.total_episodes
+      }
+      
+      const { error } = await supabase.from("anime_lists").update(updateData).eq("id", anime.id)
 
       if (error) throw error
       router.refresh()
